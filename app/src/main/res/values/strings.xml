@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Translate</string>
+
+    <string name="search">Search</string>
+
+    <string name="placeholder">placeholder</string>
+</resources>
