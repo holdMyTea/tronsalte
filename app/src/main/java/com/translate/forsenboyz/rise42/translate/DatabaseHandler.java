@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.translate.forsenboyz.rise42.translate.ListUtils.translationsToStringWithComma;
 import static com.translate.forsenboyz.rise42.translate.MainActivity.TAG;
 
 /**
@@ -75,14 +76,18 @@ public class DatabaseHandler {
     }
 
     void insert(String word, String[] translations){
-        String value = "";
-        for(String s: translations){
-            value = value + s + ",";
-        }
-        Log.d(TAG, "insert: before actual isnsert, whole table: ");
+        String value = translationsToStringWithComma(translations);
+        Log.d(TAG, "insert: before actual insert, whole table: ");
         Log.d(TAG, getAll().toString());
         Log.d(TAG, "insert: "+"insert into "+DATABASE_TABLE+" values('"+word+"','"+value+"')");
         database.execSQL("insert into "+DATABASE_TABLE+" values('"+word+"','"+value+"')");
+    }
+
+    void update(String word, String[] translations){
+        String sql = "update "+DATABASE_TABLE+" set "+VALUE_COLUMN+"='"
+                + translationsToStringWithComma(translations)+ "' where "+KEY_COLUMN+"='"+word+"'";
+        Log.d(TAG, "update: "+sql);
+        database.execSQL(sql);
     }
 
     private class DatabaseCreator extends SQLiteOpenHelper {
