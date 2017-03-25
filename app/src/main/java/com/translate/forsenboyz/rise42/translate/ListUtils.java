@@ -45,10 +45,15 @@ public class ListUtils {
             }
         }
 
+        if(list.isEmpty())
+            return null;
+
         return list.toArray(new String[0]);
     }
 
     public static String StringArrayToString(String[] array){
+        if(array == null)
+            return null;
         String s = "";
         for(String a: array){
             s = s + a;

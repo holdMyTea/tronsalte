@@ -90,6 +90,12 @@ public class DatabaseHandler {
         database.execSQL(sql);
     }
 
+    void delete(String word){
+        String sql = "delete from "+DATABASE_TABLE+" where "+KEY_COLUMN+"='"+word+"'";
+        Log.d(TAG, "delete: "+sql);
+        database.execSQL(sql);
+    }
+
     private class DatabaseCreator extends SQLiteOpenHelper {
 
         DatabaseCreator(Context context) {

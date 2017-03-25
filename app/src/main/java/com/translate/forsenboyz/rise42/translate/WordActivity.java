@@ -1,6 +1,8 @@
 package com.translate.forsenboyz.rise42.translate;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -71,28 +73,11 @@ public class WordActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.menu_search_ok:
-                if (!results.isEmpty()) {
-                    Toast.makeText(WordActivity.this, "OK", Toast.LENGTH_SHORT).show();
-                    try {
-                        Log.d(TAG, "OK: q: " + word + " results:"
-                                + StringArrayToString(getUnchosenResults(listWord, results)));
-                        Log.d(TAG, "onOptionsItemSelected: updating into");
-                        databaseHandler.update(word, getUnchosenResults(listWord, results));
-                        Log.d(TAG, "onOptionsItemSelected: getting back");
-                        Log.d(TAG, "onOptionsItemSelected: got this:"
-                                + databaseHandler.get(word));
-                        finish();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.d(TAG, "onOptionsItemSelected: " + e);
-                    }
-                }
+                onOkMenuButtonClick();
                 break;
 
             case R.id.menu_search_cancel:
-                results.clear();
-                listWord.invalidateViews();
-                Toast.makeText(WordActivity.this, "cancel", Toast.LENGTH_SHORT).show();
+                cancel();
                 break;
         }
 
@@ -135,6 +120,67 @@ public class WordActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    private void onOkMenuButtonClick(){
+        if (!results.isEmpty()) {
+            try {
+                String remaining = StringArrayToString(getUnchosenResults(listWord, results));
+                Log.d(TAG, "OK: q: " + word + " results:" + remaining);
+                Log.d(TAG, "onOptionsItemSelected: updating into");
+                if(remaining == null){
+                    showDeleteDialog();
+                } else{
+                    databaseHandler.update(word, getUnchosenResults(listWord, results));
+                    Log.d(TAG, "onOptionsItemSelected: getting back");
+                    Log.d(TAG, "onOptionsItemSelected: got this:"
+                            + databaseHandler.get(word));
+                    Toast.makeText(WordActivity.this, "OK", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d(TAG, "onOptionsItemSelected: " + e);
+            }
+        }
+    }
+
+    private void showDeleteDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(WordActivity.this);
+        builder.setMessage(R.string.delete_dialog);
+
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                databaseHandler.delete(word);
+                Log.d(TAG, "onClick: "+word+" must have been deleted from db");
+                finish();
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                cancel();
+            }
+        });
+
+        /*builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                cancel();
+            }
+        });
+
+        builder.setCancelable(true);*/
+
+        builder.show();
+    }
+
+    private void cancel(){
+        results.clear();
+        listWord.invalidateViews();
+        Toast.makeText(WordActivity.this, "cancel", Toast.LENGTH_SHORT).show();
     }
 
     private AdapterView.OnItemClickListener makeResultListClickListener() {
