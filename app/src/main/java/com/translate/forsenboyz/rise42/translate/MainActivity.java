@@ -79,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fillList(){
+        if(databaseHandler.getCount() == 0){
+            return;
+        }
         List<Map<String,String>> list = databaseHandler.getAll();
         if(list == null){
             return;

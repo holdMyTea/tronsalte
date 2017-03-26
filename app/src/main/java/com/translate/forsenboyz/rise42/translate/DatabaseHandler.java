@@ -77,8 +77,6 @@ public class DatabaseHandler {
 
     void insert(String word, String[] translations){
         String value = translationsToStringWithComma(translations);
-        Log.d(TAG, "insert: before actual insert, whole table: ");
-        Log.d(TAG, getAll().toString());
         Log.d(TAG, "insert: "+"insert into "+DATABASE_TABLE+" values('"+word+"','"+value+"')");
         database.execSQL("insert into "+DATABASE_TABLE+" values('"+word+"','"+value+"')");
     }
@@ -94,6 +92,10 @@ public class DatabaseHandler {
         String sql = "delete from "+DATABASE_TABLE+" where "+KEY_COLUMN+"='"+word+"'";
         Log.d(TAG, "delete: "+sql);
         database.execSQL(sql);
+    }
+
+    int getCount(){
+        return database.rawQuery("select count(*) from "+DATABASE_TABLE, null).getCount();
     }
 
     private class DatabaseCreator extends SQLiteOpenHelper {
