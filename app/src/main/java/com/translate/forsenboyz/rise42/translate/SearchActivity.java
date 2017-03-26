@@ -1,7 +1,7 @@
 package com.translate.forsenboyz.rise42.translate;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,10 +27,11 @@ import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static com.translate.forsenboyz.rise42.translate.ListUtils.*;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -95,9 +96,9 @@ public class SearchActivity extends AppCompatActivity {
                     Toast.makeText(SearchActivity.this, "OK", Toast.LENGTH_SHORT).show();
                     try {
                         Log.d(TAG, "OK: q: "+query+" results:"
-                                +StringArrayToString(getChosenResults()));
+                                +StringArrayToString(getChosenResults(listResults,results)));
                         Log.d(TAG, "onOptionsItemSelected: putting this into");
-                        databaseHandler.insert(query, getChosenResults());
+                        databaseHandler.insert(query, getChosenResults(listResults,results));
                         Log.d(TAG, "onOptionsItemSelected: getting back");
                         Log.d(TAG, "onOptionsItemSelected: got this:"
                                 +databaseHandler.get(query));
@@ -117,29 +118,6 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         return false;
-    }
-
-    private String[] getChosenResults() {
-        /*ArrayList<String> list = new ArrayList<>(results.size());
-
-        for (int id : results) {
-            list.add(
-                    (String) ((HashMap) listResults.getAdapter().getItem(id)).get("value")
-            );
-        }
-
-        return list;*/
-
-        String[] list = new String[results.size()];
-
-        Iterator<Integer> iterator = results.iterator();
-
-        for (int i=0; i<list.length; i++){
-            list[i] = (String)
-                    ((HashMap) listResults.getAdapter().getItem(iterator.next())).get("value");
-        }
-
-        return list;
     }
 
     private void showMenuButtons() {
@@ -220,9 +198,9 @@ public class SearchActivity extends AppCompatActivity {
                                             new SimpleAdapter(
                                                     SearchActivity.this,
                                                     list,
-                                                    R.layout.list_item,
+                                                    R.layout.list_item_search,
                                                     new String[]{"type", "value"},
-                                                    new int[]{R.id.textItemTitle, R.id.textItemValue}
+                                                    new int[]{R.id.textItemSearchType, R.id.textItemSearchValue}
                                             ){
                                                 @Override
                                                 public View getView(int position, View convertView, ViewGroup parent) {
@@ -230,7 +208,7 @@ public class SearchActivity extends AppCompatActivity {
                                                     if(results.contains(position)){
                                                         view = getLayoutInflater().inflate(R.layout.list_item_selected, parent, false);
                                                     } else {
-                                                        view = getLayoutInflater().inflate(R.layout.list_item, parent, false);
+                                                        view = getLayoutInflater().inflate(R.layout.list_item_search, parent, false);
                                                     }
                                                     return super.getView(position, view, parent);
                                                 }
@@ -283,11 +261,4 @@ public class SearchActivity extends AppCompatActivity {
         };
     }
 
-    private String StringArrayToString(String[] array){
-        String s = "";
-        for(String a: array){
-            s = s + a;
-        }
-        return s;
-    }
 }

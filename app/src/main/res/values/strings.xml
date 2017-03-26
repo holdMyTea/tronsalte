@@ -4,4 +4,10 @@
     <string name="search">Search</string>
 
     <string name="placeholder">placeholder</string>
+
+    <string name="delete_dialog">Delete this word?</string>
+
+    <string name="yes">Yes</string>
+
+    <string name="cancel">Cancel</string>
 </resources>

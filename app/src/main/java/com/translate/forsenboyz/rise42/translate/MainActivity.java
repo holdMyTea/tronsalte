@@ -6,11 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import java.util.List;
 import java.util.Map;
+
+import static com.translate.forsenboyz.rise42.translate.DatabaseHandler.KEY_COLUMN;
+import static com.translate.forsenboyz.rise42.translate.DatabaseHandler.VALUE_COLUMN;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         databaseHandler = DatabaseHandler.getInstance(MainActivity.this);
 
         listMain = (ListView) findViewById(R.id.listMain);
+        listMain.setOnItemClickListener(makeOnItemClick());
 
         Log.d(TAG, "onCreate: Created");
     }
@@ -57,7 +63,25 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    private AdapterView.OnItemClickListener makeOnItemClick(){
+        return new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Map<String,String> data = (Map<String,String>) parent.getItemAtPosition(position);
+                Log.d(TAG, "onItemClick: data:"+data);
+
+                Intent intent = new Intent(MainActivity.this, WordActivity.class);
+                intent.putExtra(KEY_COLUMN, data.get(KEY_COLUMN));
+                intent.putExtra(VALUE_COLUMN, data.get(VALUE_COLUMN));
+                startActivity(intent);
+            }
+        };
+    }
+
     private void fillList(){
+        if(databaseHandler.getCount() == 0){
+            return;
+        }
         List<Map<String,String>> list = databaseHandler.getAll();
         if(list == null){
             return;
@@ -66,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
                 new SimpleAdapter(
                         MainActivity.this,
                         databaseHandler.getAll(),
-                        R.layout.list_item,
-                        new String[]{DatabaseHandler.KEY_COLUMN, DatabaseHandler.VALUE_COLUMN},
-                        new int[]{R.id.textItemTitle, R.id.textItemValue}
+                        R.layout.list_item_main,
+                        new String[]{KEY_COLUMN, DatabaseHandler.VALUE_COLUMN},
+                        new int[]{R.id.textItemMainWord, R.id.textItemMainValue}
                 )
         );
     }

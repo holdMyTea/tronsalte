@@ -6,7 +6,7 @@
     android:background="@color/colorPrimary">
 
     <TextView
-        android:id="@+id/textItemTitle"
+        android:id="@+id/textItemSearchType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -15,14 +15,14 @@
         android:text="@string/placeholder" />
 
     <TextView
-        android:id="@+id/textItemValue"
+        android:id="@+id/textItemSearchValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
         android:textSize="20sp"
         android:textColor="@android:color/white"
         android:text="@string/placeholder"
-        android:layout_alignTop="@id/textItemTitle"
-        android:layout_alignLeft="@+id/textItemTitle"
-        android:layout_alignStart="@+id/textItemTitle" />
+        android:layout_alignTop="@id/textItemSearchType"
+        android:layout_alignLeft="@+id/textItemSearchType"
+        android:layout_alignStart="@+id/textItemSearchType" />
 </RelativeLayout>
