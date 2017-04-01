@@ -60,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
+        else if(id == R.id.menu_main_backup){
+            startActivity(new Intent(this, BackupActivity.class));
+            return true;
+        }
+
         return false;
     }
 

@@ -21,7 +21,7 @@ import static com.translate.forsenboyz.rise42.translate.MainActivity.TAG;
 
 public class DatabaseHandler {
 
-    private static final String DATABASE_NAME = "dict";
+    static final String DATABASE_NAME = "dict";
     private static final String DATABASE_TABLE = "words";
     private static final int DATABASE_VERSION = 3;
 
