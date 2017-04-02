@@ -2,9 +2,9 @@ package com.translate.forsenboyz.rise42.translate;
 
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,9 +19,12 @@ import android.widget.Toast;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.translate.forsenboyz.rise42.translate.DatabaseHandler.*;
+import static com.translate.forsenboyz.rise42.translate.DatabaseHandler.KEY_COLUMN;
+import static com.translate.forsenboyz.rise42.translate.DatabaseHandler.VALUE_COLUMN;
+import static com.translate.forsenboyz.rise42.translate.ListUtils.CommaStringToListOfMaps;
+import static com.translate.forsenboyz.rise42.translate.ListUtils.StringArrayToString;
+import static com.translate.forsenboyz.rise42.translate.ListUtils.getUnchosenResults;
 import static com.translate.forsenboyz.rise42.translate.MainActivity.TAG;
-import static com.translate.forsenboyz.rise42.translate.ListUtils.*;
 
 public class WordActivity extends AppCompatActivity {
 

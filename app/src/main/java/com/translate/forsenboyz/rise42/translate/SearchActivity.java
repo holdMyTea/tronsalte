@@ -31,7 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.translate.forsenboyz.rise42.translate.ListUtils.*;
+import static com.translate.forsenboyz.rise42.translate.ListUtils.StringArrayToString;
+import static com.translate.forsenboyz.rise42.translate.ListUtils.getChosenResults;
 
 public class SearchActivity extends AppCompatActivity {
 

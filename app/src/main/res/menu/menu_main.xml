@@ -8,4 +8,10 @@
         app:showAsAction="ifRoom"
         android:visible="true"/>
 
+    <item android:id="@+id/menu_main_backup"
+        android:title="@string/placeholder"
+        android:icon="@drawable/backup"
+        app:showAsAction="ifRoom"
+        android:visible="true"/>
+
 </menu>

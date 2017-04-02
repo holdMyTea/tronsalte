@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.translate.forsenboyz.rise42.translate.DatabaseHandler.*;
+import static com.translate.forsenboyz.rise42.translate.DatabaseHandler.VALUE_COLUMN;
 import static com.translate.forsenboyz.rise42.translate.MainActivity.TAG;
 
 /**

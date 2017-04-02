@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ import static com.translate.forsenboyz.rise42.translate.DatabaseHandler.VALUE_CO
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "14tag88";
+
+    private static final int BACK_UP_CODE = 1;
 
     DatabaseHandler databaseHandler;
 
@@ -52,11 +55,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == BACK_UP_CODE){
+            if(resultCode == RESULT_OK)
+                Toast.makeText(MainActivity.this,"Backup successful",Toast.LENGTH_SHORT).show();
+            else if(resultCode == RESULT_CANCELED)
+                Toast.makeText(MainActivity.this, "Error while backing up", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if(id == R.id.menu_main_add){
             startActivity(new Intent(this, SearchActivity.class));
+            return true;
+        }
+
+        else if(id == R.id.menu_main_backup){
+            startActivityForResult(new Intent(this, BackupActivity.class), BACK_UP_CODE);
             return true;
         }
 

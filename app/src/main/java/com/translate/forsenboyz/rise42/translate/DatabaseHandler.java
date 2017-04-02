@@ -6,6 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,7 +24,7 @@ import static com.translate.forsenboyz.rise42.translate.MainActivity.TAG;
 
 public class DatabaseHandler {
 
-    private static final String DATABASE_NAME = "dict";
+    static final String DATABASE_NAME = "dict";
     private static final String DATABASE_TABLE = "words";
     private static final int DATABASE_VERSION = 3;
 
@@ -62,17 +65,40 @@ public class DatabaseHandler {
 
         Map<String,String> map;
         cursor.moveToFirst();
-        while(cursor.moveToNext()){
+        do{
             map = new HashMap<>(2);
             map.put(KEY_COLUMN, cursor.getString(cursor.getColumnIndex(KEY_COLUMN)));
 
             String values = cursor.getString(cursor.getColumnIndex(VALUE_COLUMN)).replaceAll(",",", ");
             map.put(VALUE_COLUMN, values.substring(0,values.length()-2));
             list.add(map);
-        }
+        }while(cursor.moveToNext());
 
         cursor.close();
         return list;
+    }
+
+    JsonObject getAllAsJson(){
+        Cursor cursor = database.rawQuery("select * from "+DATABASE_TABLE, null);
+
+        if(cursor.getCount() == 0){
+            return null;
+        }
+
+        JsonObject object = new JsonObject();
+
+        cursor.moveToFirst();
+        do{
+            JsonArray values = new JsonArray();
+            for(String s: cursor.getString(cursor.getColumnIndex(VALUE_COLUMN)).split(","))
+                values.add(s);
+            object.add(
+                    cursor.getString(cursor.getColumnIndex(KEY_COLUMN)),
+                    values
+            );
+        } while(cursor.moveToNext());
+
+        return object;
     }
 
     void insert(String word, String[] translations){
