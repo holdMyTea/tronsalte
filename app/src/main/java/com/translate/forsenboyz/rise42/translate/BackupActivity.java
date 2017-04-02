@@ -11,7 +11,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -28,7 +27,6 @@ public class BackupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_backup);
 
         checkPermission();
     }
@@ -55,8 +53,8 @@ public class BackupActivity extends AppCompatActivity {
             Toast.makeText(this,"Nice",Toast.LENGTH_SHORT).show();
             checkPermission();
         } else{
-            Toast.makeText(this,"What a digusting person you are",Toast.LENGTH_SHORT).show();
-            //checkPermission();
+            Toast.makeText(this,"What a disgusting person you are",Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 
@@ -71,62 +69,45 @@ public class BackupActivity extends AppCompatActivity {
 
                 if(externalDirs != null && externalDirs.length >=2){
                     directoryDB = externalDirs[1];
-                    Log.d(TAG, "doInBackground: SDDIR::"+directoryDB.getAbsolutePath());
+                    Log.d(TAG, "doInBackground: dir on SD:"+directoryDB.getAbsolutePath());
                 } else{
-                    Log.d(TAG, "doInBackground: pity");
-                    Toast.makeText(BackupActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                    publishProgress(null);
+                    Log.d(TAG, "doInBackground: no SD found");
+                    return RESULT_CANCELED;
                 }
-
-                Log.d(TAG, "doInBackground: made a dir");
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy_HH..mm");
 
-                File originalDB = getApplicationContext().getDatabasePath(DatabaseHandler.DATABASE_NAME);
-                File targetDB = new File(directoryDB, dateFormat.format(new Date())+".sqlite");
-                targetDB.createNewFile();
+                File targetFile = new File(directoryDB, dateFormat.format(new Date())+".json");
+                targetFile.createNewFile();
 
-                Log.d(TAG, "target db path: "+targetDB.getAbsolutePath());
+                Log.d(TAG, "target db path: "+targetFile.getAbsolutePath());
 
-                Log.d(TAG, "doInBackground: coping file");
-
-                copyFile(originalDB, targetDB);
-
-                Log.d(TAG, "doInBackground: copied");
-
-                publishProgress(null);
+                copyDB(targetFile);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Object[] values) {
-            finish();
+            return RESULT_OK;
         }
 
         @Override
         protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
+            setResult((int)o);
+            finish();
         }
 
-        private void copyFile(File source, File copy) throws IOException {
-            FileReader reader = new FileReader(source);
+        private void copyDB(File copy) throws IOException {
+            Log.d(TAG, "doInBackground: coping file");
+
             FileWriter writer = new FileWriter(copy);
 
-            char[] buff = new char[1024];
-            int len;
-            while ((len = reader.read(buff)) > 0) {
-                writer.write(buff, 0, len);
-            }
-
+            writer.write(DatabaseHandler.getInstance(BackupActivity.this).getAllAsJson().toString());
             writer.flush();
 
-            reader.close();
             writer.close();
+
+            Log.d(TAG, "doInBackground: copied");
         }
     }
 
